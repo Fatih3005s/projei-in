@@ -7,16 +7,14 @@ public class PlayerController : MonoBehaviour
     public int maxJumpCount = 2; // Maksimum zıplama sayısı
     public bool isGrounded; // Yerde mi değil mi?
 
-    private float jumpCount = 0; //Yapılan zıplama sayısı
+    private int jumpCount = 0; //Yapılan zıplama sayısı
     private Rigidbody2D rb;
-    private Collider2D coll;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        coll = GetComponent<Collider2D>();
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
@@ -44,26 +42,25 @@ public class PlayerController : MonoBehaviour
             animator.SetFloat("Speed", 0);
         }
 
-
-        // Zıplama
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded && jumpCount < maxJumpCount)
+        // Zıplama kontrolü
+        if (Input.GetKeyDown(KeyCode.Space) && jumpCount < maxJumpCount)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
             jumpCount++;
-            if (jumpCount > 0 )
-            {
-                animator.SetFloat("Jump", Mathf.Abs(jumpCount));
-            }
-            else if (jumpCount > 1 )
-            {
-                animator.SetFloat("Jump", Mathf.Abs(jumpCount));
-            }
-            else if(jumpCount < 0)
-            {
-                animator.SetFloat("Jump", Mathf.Abs(jumpCount));
-            }
-
         }
+
+        // -Y yönünde yapılan hareket kontrolü
+        if (rb.velocity.y < 0)
+        {
+            animator.SetBool("isFalling", true);
+        }
+        else
+        {
+            animator.SetBool("isFalling", false);
+        }
+
+        // Animator'a zıplama sayısını iletiyoruz
+        animator.SetInteger("JumpCount", jumpCount);
     }
 
     void OnCollisionEnter2D(Collision2D collision)
