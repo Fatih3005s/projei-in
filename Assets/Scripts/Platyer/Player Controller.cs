@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float moveSpeed = 5f; // Hareket hızı
-    public float jumpForce = 10f;
-    public int maxJumpCount = 2; // Maksimum zıplama sayısı
-    public bool isGrounded; // Yerde mi değil mi?
+    [SerializeField] private float moveSpeed = 5f; // Hareket hızı
+    [SerializeField] private float jumpForce = 10f;
+    [SerializeField] private int maxJumpCount = 2; // Maksimum zıplama sayısı
+    [SerializeField] private bool isGrounded; // Yerde mi değil mi?
 
     private int jumpCount = 0; //Yapılan zıplama sayısı
     private Rigidbody2D rb;
