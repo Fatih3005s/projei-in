@@ -7,20 +7,25 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float jumpForce = 10f;
     [SerializeField] private int maxJumpCount = 3;
     [SerializeField] private int jumpCount = 0;
+    [SerializeField] private int health;
+    [SerializeField] private int maxHp;
+    [SerializeField] private int damage;
+
 
     private bool isGrounded;
     private Rigidbody2D rb;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
 
-    void Start()
+    private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        health = maxHp;
     }
 
-    void Update()
+    private void Update()
     {
         float moveInput = Input.GetAxis("Horizontal");
         rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
@@ -57,9 +62,14 @@ public class PlayerController : MonoBehaviour
         }
 
         animator.SetInteger("JumpCount", jumpCount);
+
+        if(Input.GetKeyDown(KeyCode.R))
+        {
+            RestartGame();
+        }
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
@@ -74,9 +84,22 @@ public class PlayerController : MonoBehaviour
         }
 
         // Yeni eklenen kısım:
-        if (collision.gameObject.CompareTag("NextScene")) // Eğer çarpıştığımız obje "NextScene" etiketine sahip ise
+        if (collision.gameObject.CompareTag("NextScene")) 
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1); // Bir sonraki sahneyi yükle
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1); 
         }
+
+        if(collision.gameObject.CompareTag("TakeDamege"))
+        {
+            health -= damage;
+            if (health <= 0)
+            {
+                Time.timeScale = 0f;
+            }
+        }
+    }
+    private void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }
