@@ -4,10 +4,10 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 5f; // Hareket hızı
     [SerializeField] private float jumpForce = 10f;
-    [SerializeField] private int maxJumpCount = 2; // Maksimum zıplama sayısı
-    [SerializeField] private bool isGrounded; // Yerde mi değil mi?
-
-    private int jumpCount = 0; //Yapılan zıplama sayısı
+    [SerializeField] private int maxJumpCount = 3; // Maksimum zıplama sayısı
+    [SerializeField] private int jumpCount = 0;
+    
+    private bool isGrounded; // Yerde mi değil mi?
     private Rigidbody2D rb;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
@@ -47,9 +47,10 @@ public class PlayerController : MonoBehaviour
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
             jumpCount++;
+            animator.SetInteger("JumpCount", jumpCount);
         }
 
-        // -Y yönünde yapılan hareket kontrolü
+        // -Y yönünde yapılan hareket kontrolü ve isFalling kontrolü
         if (rb.velocity.y < 0)
         {
             animator.SetBool("isFalling", true);
@@ -63,22 +64,22 @@ public class PlayerController : MonoBehaviour
         animator.SetInteger("JumpCount", jumpCount);
     }
 
+
     void OnCollisionEnter2D(Collision2D collision)
     {
-        // Yere temas kontrolü
-        if (collision.contacts[0].normal.y > 0.5)
+        if (collision.gameObject.CompareTag("Ground")) // Eğer çarpıştığımız obje "Ground" etiketine sahip ise
         {
-            isGrounded = true;
+            isGrounded = true; // Yere değdiğimizi belirtmek için isGrounded'i true yap
+            animator.SetBool("isGrounded", true); // Animator'a da yere değdiğimizi iletiyoruz
             jumpCount = 0; // Yerdeyken zıplama sayısını sıfırla
         }
-    }
-
-    void OnCollisionExit2D(Collision2D collision)
-    {
-        // Yere temasın bitişi kontrolü
-        if (collision.contacts.Length > 0 && collision.contacts[0].normal.y > 0.5)
+        else 
         {
             isGrounded = false;
+            animator.SetBool("isGrounded", false);
         }
+    
     }
+
+
 }
