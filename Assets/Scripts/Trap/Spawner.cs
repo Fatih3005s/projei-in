@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    public GameObject objectToSpawn; // Spawn edilecek objenin prefab'ı
-    public float spawnInterval = 3f; // Objeler arasındaki süre (saniye)
-    public bool spawnRight = true; // Spawn edilen objelerin başlangıçta sağa mı gideceği?
-    public float despawnDelay = 5f; // Spawn edilen objenin yok olma gecikmesi (saniye)
+    [SerializeField] private GameObject objectToSpawn; // Spawn edilecek objenin prefab'ı
+    [SerializeField] private float spawnInterval = 3f; // Objeler arasındaki süre (saniye)
+    [SerializeField] private bool spawnRight = true; // Spawn edilen objelerin başlangıçta sağa mı gideceği?
+    [SerializeField] private float despawnDelay = 5f; // Spawn edilen objenin yok olma gecikmesi (saniye)
 
     void Start()
     {
